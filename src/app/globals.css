@@ -1,26 +1,121 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
+@theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+
+  @keyframes accordion-down {
+    from {
+      height: 0
+    }
+
+    to {
+      height: var(--radix-accordion-content-height)
+    }
+  }
+
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height)
+    }
+
+    to {
+      height: 0
+    }
+  }
+
+  @keyframes shine {
+    0% {
+      left: -100%;
+      opacity: 0;
+    }
+
+    20% {
+      opacity: 0.5;
+    }
+
+    50% {
+      opacity: 0.5;
+    }
+
+    100% {
+      left: 200%;
+      opacity: 0;
+    }
+  }
 }
 
-@media (prefers-color-scheme: dark) {
+:root {
+  --background: #ffffff;
+  --foreground: #1A2E05;
+  /* Black/Dark Green */
+
+  /* Yellow Theme */
+  --primary: #FACC15;
+  /* Yellow-400 */
+  --primary-foreground: #1A2E05;
+
+  --secondary: #1A2E05;
+  /* Dark for contrast */
+  --secondary-foreground: #FACC15;
+
+  --muted: #fefce8;
+  /* Yellow-50 */
+  --muted-foreground: #854d0e;
+
+  --accent: #fef08a;
+  /* Yellow-200 */
+  --accent-foreground: #1A2E05;
+
+  --destructive: #ef4444;
+  --destructive-foreground: #fef2f2;
+
+  --border: #e2e8f0;
+  --input: #e2e8f0;
+  --ring: #FACC15;
+
+  --radius: 0.5rem;
+}
+
+/* @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
-}
+} */
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  /* Prevent horizontal scroll from parallax/animations */
+}
+
+/* Scrollbar styling for webkit */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--muted);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #EAB308;
+  /* Yellow-500 */
 }
