@@ -1,17 +1,14 @@
 'use server'
 
-import { PrismaClient } from '@prisma/client'
-
-const prisma = new PrismaClient()
+import { db } from "@/db"
+import { members, directorates } from "@/db/schema"
+import { desc } from "drizzle-orm"
 
 export async function getBirthdays() {
     try {
         const today = new Date()
-        // Simple logic: fetch all and filter in memory for simplicity with SQLite dates
-        // In production, proper SQL query is better.
-        const allMembers = await prisma.member.findMany({
-            select: { name: true, birthDate: true }
-        })
+        // Drizzle fetches are fast. Fetching all to maintain the existing complex logic.
+        const allMembers = await db.select({ name: members.name, birthDate: members.birthDate }).from(members)
 
         const membersWithNextBday = allMembers.map(m => {
             const bday = new Date(m.birthDate)
@@ -41,8 +38,6 @@ export async function getBirthdays() {
         const upcoming = membersWithNextBday.filter(m => m.nextBday > today).slice(0, 5)
 
         // Recent: passed this year (or late last year)
-        // We look for items where currentYearBday < today.
-        // Sort distinct list by closeness to today (descending date)
         const recent = allMembers
             .map(m => {
                 const bday = new Date(m.birthDate)
@@ -70,9 +65,9 @@ export async function getBirthdays() {
 
 export async function getDirectorates() {
     try {
-        return await prisma.directorate.findMany({
-            include: { directors: true },
-            orderBy: { startYear: 'desc' }
+        return await db.query.directorates.findMany({
+            with: { directors: true },
+            orderBy: [desc(directorates.startYear)]
         })
     } catch (error) {
         console.error("Failed to fetch directorates", error)
